@@ -17,8 +17,14 @@ let source = Rx.Observable
   })
   .take(50);
 
+let curr = Date.now();
 let subscription = source.subscribe(
-  x => console.log(x),
+  x => {
+    let newDate = Date.now();
+    let diff = newDate - curr;
+    curr = newDate;
+    console.log(`${diff} ${x}`);
+  },
   err => console.log('err'),
   () => console.log('done')
 );
