@@ -3,7 +3,9 @@
 let Rx = require('rx');
 
 let heartbeatStream = require('./mock-heartbeat-stream');
+let animationEasing = require('./mock-animation-easing');
 let BikeLights = require('./bike-lights');
+let consoleRenderer = require('./console-renderer');
 
 let toMillis = x => {
   return Rx.Observable
@@ -24,7 +26,7 @@ let source = heartbeatStream
   .take(50);
 
 let curr = Date.now();
-let lights = new BikeLights();
+let lights = new BikeLights(consoleRenderer);
 let subscription = source.subscribe(
   x => {
     lights.setIntensity(x === 'beat' ? 1 : 0);
@@ -33,3 +35,8 @@ let subscription = source.subscribe(
   () => console.log('done')
 );
 
+let animation = animationEasing.subscribe(
+  x => lights.setRgb(x),
+  e => console.log('err'),
+  () => console.log('done')
+);
