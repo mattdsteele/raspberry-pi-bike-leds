@@ -27,13 +27,16 @@ let source = heartbeatStream
   .take(50);
 
 let curr = Date.now();
-let lights = new BikeLights(ledRenderer);
+let lights = new BikeLights(consoleRenderer);
 let subscription = source.subscribe(
   x => {
     lights.setIntensity(x === 'beat' ? 1 : 0);
   },
   err => console.log('err'),
-  () => console.log('done')
+  () => {
+    console.log('done');
+    lights.setIntensity(1);
+  }
 );
 
 let animation = animationEasing.subscribe(

@@ -10,7 +10,7 @@ module.exports = Rx.Observable.create(observer => {
   let animation = new AnimationTimer()
     .duration('5s')
     .on('tick', easer(percent =>  {
-      observer.onNext(percent * 100);
+      observer.onNext(percent);
     }))
     .bounce();
 });

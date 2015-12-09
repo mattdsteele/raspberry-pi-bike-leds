@@ -17,14 +17,9 @@ class BikeLights {
   }
 
   setRgb(percent) {
-    let to255 = Math.round(percent * 2.55);
-    this.color.r = to255;
-    this.color.g = to255;
+    this.color.r = percent;
+    this.color.g = (1 - percent);
     this.renderer(this);
-  }
-
-  render() {
-    console.log(`int: ${this.intensity}, { ${this.color.r}, ${this.color.g}, ${this.color.b} }`);
   }
 }
 
