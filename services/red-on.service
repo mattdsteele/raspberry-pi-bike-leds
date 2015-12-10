@@ -1,0 +1,12 @@
+[Service]
+ExecStart=/opt/node/bin/node /home/pi/code/pibike/spike/red-on.js
+Restart=on-abort
+RestartSec=60
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=red-on
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target
