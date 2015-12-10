@@ -1,16 +1,19 @@
 'use strict';
 
 let Rx = require('rx');
+let process = require('process');
 
-let heartbeatStream = require('./mock-heartbeat-stream');
+let mockHeartbeatStream = require('./mock-heartbeat-stream');
+let heartbeatStream = require('./heartbeat-stream');
 let animationEasing = require('./mock-animation-easing');
 let BikeLights = require('./bike-lights');
 let consoleRenderer = require('./console-renderer');
 let ledRenderer = require('./led-renderer');
 
+
 let toMillis = x => {
-  return Rx.Observable
-    .interval(1 / (x / 60) * 1000);
+  let periodicity = Math.round((1 / (x / 60) * 1000));
+  return Rx.Observable.interval(periodicity);
 };
 
 let beatAndOff = x => {
@@ -23,11 +26,10 @@ let beatAndOff = x => {
 
 let source = heartbeatStream
   .flatMapLatest(toMillis)
-  .flatMap(beatAndOff)
-  .take(50);
+  .flatMap(beatAndOff);
 
 let curr = Date.now();
-let lights = new BikeLights(consoleRenderer);
+let lights = new BikeLights(ledRenderer);
 let subscription = source.subscribe(
   x => {
     lights.setIntensity(x === 'beat' ? 1 : 0);
@@ -44,3 +46,8 @@ let animation = animationEasing.subscribe(
   e => console.log('err'),
   () => console.log('done')
 );
+
+process.on('SIGINT', () => {
+  lights.setIntensity(0);
+  process.exit(0);
+});

@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "animation-timer": "^1.0.12",
+    "ant-plus": "0.0.6",
     "functional-easing": "^1.0.8",
     "pi-blaster.js": "^0.1.1",
     "rx": "^4.0.7"
