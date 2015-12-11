@@ -34,21 +34,21 @@ let source = heartbeatStream
   .flatMapLatest(toMillis)
   .flatMap(beatAndOff);
 
-let fadeIn = lights => {
-  let easer = new Easer('quad');
-  new AnimationTimer()
-    .duration(200)
-    .on('tick', easer(percent => { lights.setIntensity(percent); }))
-    .play();
+let fade = lights => {
+  let easer = new Easer().using('quad');
+  return new AnimationTimer()
+    .duration(150)
+    .on('tick', easer(percent => { lights.setIntensity(percent); }));
 };
 
-let fadeOut = lights => {
-  lights.setIntensity(0);
-};
 let lights = new BikeLights(ledRenderer);
 let subscription = source.subscribe(
   x => {
-    x === 'beat' ? fadeIn(lights) : fadeOut(lights);
+    if (x === 'beat') {
+      fade(lights).play();
+    } else {
+      fade(lights).reverse();
+    }
   },
   err => console.log('err'),
   () => {
@@ -56,14 +56,6 @@ let subscription = source.subscribe(
     lights.setIntensity(1);
   }
 );
-
-/*
- let animation = animationEasing.subscribe(
-  x => lights.setRgb(x),
-  e => console.log('err'),
-  () => console.log('done')
-);
-*/
 
 cadenceStream.filter(x => !isNaN(x))
   .map(x => remap(x, 25, 100, 0, 1))
