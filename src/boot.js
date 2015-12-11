@@ -61,6 +61,19 @@ cadenceStream.filter(x => !isNaN(x))
     () => console.log('done')
   );
 
+
+let checkTimeout = () => {
+  cadenceStream
+    .timeout(5000)
+    .subscribe(x => {},
+      e => {
+        console.log('timed out on cadence');
+        lights.setBlue();
+      },
+      () => checkTimeout()
+    );
+};
+
 process.on('SIGINT', () => {
   lights.setIntensity(0);
   process.exit(0);

@@ -19,7 +19,14 @@ class BikeLights {
   setRgb(percent) {
     this.color.r = percent;
     this.color.g = (1 - percent);
+    this.color.b = 0;
     this.renderer(this);
+  }
+
+  setBlue() {
+    this.color.r = 0;
+    this.color.g = 0;
+    this.color.b = 1;
   }
 }
 
