@@ -1,9 +1,9 @@
 'use strict';
 
 let Rx = require('rx');
+let Ant = require('ant-plus');
+let stick = require('./ant-stick');
 
-var Ant = require('ant-plus');
-var stick = new Ant.GarminStick2();
 var sensor = new Ant.HeartRateSensor(stick);
 
 stick.on('startup', function() {
@@ -11,9 +11,6 @@ stick.on('startup', function() {
   sensor.attach(0, 0);
 });
 
-if (!stick.open()) {
-  console.log('stick not found');
-}
 
 module.exports = Rx.Observable.fromEvent(sensor, 'hbdata')
   .map(hb => hb.ComputedHeartRate)

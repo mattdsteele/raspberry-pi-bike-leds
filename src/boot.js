@@ -6,6 +6,7 @@ let process = require('process');
 let mockHeartbeatStream = require('./mock-heartbeat-stream');
 let heartbeatStream = require('./heartbeat-stream');
 let animationEasing = require('./mock-animation-easing');
+let cadenceStream = require('./cadence-stream');
 let BikeLights = require('./bike-lights');
 let consoleRenderer = require('./console-renderer');
 let ledRenderer = require('./led-renderer');
@@ -46,6 +47,8 @@ let animation = animationEasing.subscribe(
   e => console.log('err'),
   () => console.log('done')
 );
+
+cadenceStream.subscribe(x => console.log(`new cadence detected: ${x}`));
 
 process.on('SIGINT', () => {
   lights.setIntensity(0);
