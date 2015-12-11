@@ -11,6 +11,9 @@ let BikeLights = require('./bike-lights');
 let consoleRenderer = require('./console-renderer');
 let ledRenderer = require('./led-renderer');
 
+let remap = (value, fromLow, fromHigh, toLow, toHigh) => {
+  return toLow + (toHigh - toLow) * (value - fromLow) / (fromHigh - fromLow);
+};
 
 let toMillis = x => {
   let periodicity = Math.round((1 / (x / 60) * 1000));
@@ -48,7 +51,9 @@ let animation = animationEasing.subscribe(
   () => console.log('done')
 );
 
-cadenceStream.subscribe(x => console.log(`new cadence detected: ${x}`));
+cadenceStream.filter(x => !isNaN(x))
+  .map(x => remap(x, 25, 100, 0, 1))
+  .subscribe(x => console.log(`new cadence detected: ${x}`));
 
 process.on('SIGINT', () => {
   lights.setIntensity(0);
