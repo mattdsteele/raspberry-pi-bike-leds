@@ -2,6 +2,8 @@
 
 let Rx = require('rx');
 let process = require('process');
+let Easer = require('functional-easing').Easer;
+let AnimationTimer = require('animation-timer').AnimationTimer;
 
 let mockHeartbeatStream = require('./mock-heartbeat-stream');
 let heartbeatStream = require('./heartbeat-stream');
@@ -32,10 +34,21 @@ let source = heartbeatStream
   .flatMapLatest(toMillis)
   .flatMap(beatAndOff);
 
+let fadeIn = lights => {
+  let easer = new Easer('quad');
+  new AnimationTimer()
+    .duration(200)
+    .on('tick', easer(percent => { lights.setIntensity(percent); }))
+    .play();
+};
+
+let fadeOut = lights => {
+  lights.setIntensity(0);
+};
 let lights = new BikeLights(ledRenderer);
 let subscription = source.subscribe(
   x => {
-    lights.setIntensity(x === 'beat' ? 1 : 0);
+    x === 'beat' ? fadeIn(lights) : fadeOut(lights);
   },
   err => console.log('err'),
   () => {
