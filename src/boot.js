@@ -32,8 +32,7 @@ let source = heartbeatStream
   .flatMapLatest(toMillis)
   .flatMap(beatAndOff);
 
-let curr = Date.now();
-let lights = new BikeLights(consoleRenderer);
+let lights = new BikeLights(ledRenderer);
 let subscription = source.subscribe(
   x => {
     lights.setIntensity(x === 'beat' ? 1 : 0);
@@ -62,19 +61,16 @@ cadenceStream.filter(x => !isNaN(x))
   );
 
 
+//There has to be a better way to do this...
 let checkTimeout = () => {
-  console.log('here we go again');
   cadenceStream
     .timeout(5000)
-    .subscribe(x => { console.log('we got data'); },
+    .subscribe(x => {},
       e => {
-        console.log('timed out on cadence');
         lights.setBlue();
-      },
-      () => {
-        console.log('attempting to redo it');
         checkTimeout();
-      }
+      },
+      x => {}
     );
 };
 checkTimeout();
