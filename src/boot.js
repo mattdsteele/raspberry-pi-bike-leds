@@ -67,7 +67,7 @@ let checkTimeout = () => {
     .timeout(5000)
     .subscribe(x => {},
       e => {
-        lights.setBlue();
+        lights.setIdleColor();
         checkTimeout();
       },
       x => {}

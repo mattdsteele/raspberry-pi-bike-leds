@@ -23,10 +23,10 @@ class BikeLights {
     this.renderer(this);
   }
 
-  setBlue() {
+  setIdleColor() {
     this.color.r = 0;
-    this.color.g = 0;
-    this.color.b = 1;
+    this.color.g = 0.1;
+    this.color.b = 0.2;
   }
 }
 
