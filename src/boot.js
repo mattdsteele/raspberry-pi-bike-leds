@@ -33,7 +33,7 @@ let source = heartbeatStream
   .flatMap(beatAndOff);
 
 let curr = Date.now();
-let lights = new BikeLights(ledRenderer);
+let lights = new BikeLights(consoleRenderer);
 let subscription = source.subscribe(
   x => {
     lights.setIntensity(x === 'beat' ? 1 : 0);
@@ -45,15 +45,21 @@ let subscription = source.subscribe(
   }
 );
 
-let animation = animationEasing.subscribe(
+/*
+ let animation = animationEasing.subscribe(
   x => lights.setRgb(x),
   e => console.log('err'),
   () => console.log('done')
 );
+*/
 
 cadenceStream.filter(x => !isNaN(x))
   .map(x => remap(x, 25, 100, 0, 1))
-  .subscribe(x => console.log(`new cadence detected: ${x}`));
+  .subscribe(
+    x => lights.setRgb(x),
+    e => console.log('err'),
+    () => console.log('done')
+  );
 
 process.on('SIGINT', () => {
   lights.setIntensity(0);
