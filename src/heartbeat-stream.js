@@ -6,9 +6,11 @@ let stick = require('./ant-stick');
 
 var sensor = new Ant.HeartRateSensor(stick);
 
+const mattHrDeviceId = 15193;
+
 stick.on('startup', function() {
   console.log('started up, gonna attatch');
-  sensor.attach(0, 0);
+  sensor.attach(0, mattHrDeviceId);
 });
 
 
